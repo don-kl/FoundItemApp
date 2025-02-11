@@ -1,4 +1,5 @@
 ﻿using NetTopologySuite.Geometries;
+using FoundItemApp.Models.Enums;
 
 namespace FoundItemApp.Models
 {
