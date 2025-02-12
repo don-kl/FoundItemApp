@@ -7,7 +7,7 @@ using NetTopologySuite.Geometries;
 namespace FoundItemApp.Migrations
 {
     /// <inheritdoc />
-    public partial class first : Migration
+    public partial class AddModelsConfiguration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,15 +26,15 @@ namespace FoundItemApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Items",
+                name: "Item",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Coordinates = table.Column<Geometry>(type: "geography", nullable: true),
+                    UserEmail = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Coordinates = table.Column<Geometry>(type: "geography", nullable: false),
                     Category = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     DateFound = table.Column<DateOnly>(type: "date", nullable: false),
@@ -45,25 +45,37 @@ namespace FoundItemApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Items", x => x.Id);
+                    table.PrimaryKey("PK_Item", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Items_Regions_RegionId",
+                        name: "FK_Item_Regions_RegionId",
                         column: x => x.RegionId,
                         principalTable: "Regions",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Items_RegionId",
-                table: "Items",
+                name: "IX_Item_Id",
+                table: "Item",
+                column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Item_RegionId",
+                table: "Item",
                 column: "RegionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Regions_Id",
+                table: "Regions",
+                column: "Id",
+                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Items");
+                name: "Item");
 
             migrationBuilder.DropTable(
                 name: "Regions");

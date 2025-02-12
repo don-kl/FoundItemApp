@@ -4,6 +4,7 @@ using FoundItemApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace FoundItemApp.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250211233444_AddModelsConfiguration")]
+    partial class AddModelsConfiguration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,7 +93,6 @@ namespace FoundItemApp.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Geometry>("Borders")
-                        .IsRequired()
                         .HasColumnType("geography");
 
                     b.Property<string>("Name")

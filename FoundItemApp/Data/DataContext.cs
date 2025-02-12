@@ -12,7 +12,8 @@ namespace FoundItemApp.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+            modelBuilder.ApplyConfiguration(new RegionConfiguration());
+            modelBuilder.ApplyConfiguration(new ItemConfiguration());
         }
         
     }

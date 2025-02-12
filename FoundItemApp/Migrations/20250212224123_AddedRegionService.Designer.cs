@@ -13,8 +13,8 @@ using NetTopologySuite.Geometries;
 namespace FoundItemApp.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250211175406_first")]
-    partial class first
+    [Migration("20250212224123_AddedRegionService")]
+    partial class AddedRegionService
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,6 +36,7 @@ namespace FoundItemApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<Geometry>("Coordinates")
+                        .IsRequired()
                         .HasColumnType("geography");
 
                     b.Property<DateOnly>("DateFound")
@@ -43,7 +44,8 @@ namespace FoundItemApp.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Images")
                         .HasColumnType("nvarchar(max)");
@@ -66,17 +68,22 @@ namespace FoundItemApp.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("UserEmail")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Id")
+                        .IsUnique();
+
                     b.HasIndex("RegionId");
 
-                    b.ToTable("Items");
+                    b.ToTable("Item", (string)null);
                 });
 
             modelBuilder.Entity("FoundItemApp.Models.Region", b =>
@@ -86,6 +93,7 @@ namespace FoundItemApp.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Geometry>("Borders")
+                        .IsRequired()
                         .HasColumnType("geography");
 
                     b.Property<string>("Name")
@@ -94,7 +102,10 @@ namespace FoundItemApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Regions");
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.ToTable("Regions", (string)null);
                 });
 
             modelBuilder.Entity("FoundItemApp.Models.Item", b =>
