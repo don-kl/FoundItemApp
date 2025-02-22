@@ -7,7 +7,7 @@ namespace FoundItemApp.Interfaces
 {
     public interface IRegionServices
     {
-        Task<HashSet<string>?> GetAllRegionNames();
+        Task<List<string>?> GetAllRegionNames();
 
         Task<double[]?> GetRegionEnvelope(string regionName);
 

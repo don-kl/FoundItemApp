@@ -10,14 +10,14 @@ namespace FoundItemApp.Services
 {
     public class RegionServices : IRegionServices
     {
-        private readonly DataContext _context; 
+        private readonly DataContext _context;
 
         public RegionServices(DataContext context)
         {
-            _context = context; 
+            _context = context;
         }
 
-        public async Task<HashSet<string>?> GetAllRegionNames()
+        public async Task<List<string>?> GetAllRegionNames()
         {
             var names = await _context.Regions.Select(r => r.Name).ToListAsync();
 
@@ -26,7 +26,7 @@ namespace FoundItemApp.Services
                 return null;
             }
 
-            var regionsNames = new HashSet<string>(names);
+            var regionsNames = new HashSet<string>(names).ToList();
 
             return regionsNames;
         }
