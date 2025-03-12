@@ -12,7 +12,7 @@ namespace FoundItemApp.Data
             builder.HasKey(x => x.Id);
             builder.HasIndex(x => x.Id).IsUnique();
             builder.Property(x => x.Name).IsRequired();
-            builder.Property(x => x.Borders);
+            builder.Property(x => x.Borders).HasColumnType("geometry").IsRequired();
             builder.HasMany(x => x.Items).WithOne(x => x.Region).HasForeignKey(x => x.RegionId);
         }
     }

@@ -1,23 +1,19 @@
-﻿using NetTopologySuite.Geometries;
-using FoundItemApp.Models.Enums;
+﻿using FoundItemApp.Models.Enums;
+using System.ComponentModel.DataAnnotations;
 
-namespace FoundItemApp.Models
+namespace FoundItemApp.Dto.Item
 {
-    public class Item
+    public class GetItemByIdDto
     {
         public Guid Id { get; set; }
         public string Description { get; set; } = string.Empty;
         public string Title { get; set; } = string.Empty;
         public string Location { get; set; } = string.Empty;
         public string UserEmail { get; set; } = string.Empty;
-        public Geometry? Coordinates { get; set; }
         public ItemCategory Category { get; set; }
-        public ItemStatus Status { get; set; }
         public DateOnly DateFound { get; set; }
         public TimeOnly TimeFound { get; set; }
-        public DateTime PostedDate { get; set; }
-        public List<string>? Images { get; set; } = new List<string>();
-        public int? RegionId { get; set; }
-        public Region? Region { get; set; }
+        public string RegionName {  get; set; } = string.Empty;
+        public List<string>? Pictures { get; set; }
     }
 }

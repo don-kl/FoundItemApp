@@ -31,7 +31,7 @@ namespace FoundItemApp.Services
             return regionsNames;
         }
 
-        public async Task<Double[]?> GetRegionEnvelope(string regionName)
+        public async Task<double[]?> GetRegionEnvelope(string regionName)
         {
             var region = await _context.Regions.FirstOrDefaultAsync(x => x.Name == regionName);
 
@@ -56,12 +56,15 @@ namespace FoundItemApp.Services
                 return null;
             }
 
-            var envelope = GetRegionEnvelope(regionName);
+            Envelope env = region.Borders.EnvelopeInternal;
+
+            double[] envelope = {env.MinY, env.MinX, env.MaxY, env.MaxX };
 
             AttributesTable attributeTable = new AttributesTable
             {
                 {"name", region.Name},
-                {"envelope",  envelope}
+                {"envelope", envelope},
+
             };
 
             Feature feature = new Feature(region.Borders, attributeTable);

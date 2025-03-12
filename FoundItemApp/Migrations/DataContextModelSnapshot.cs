@@ -54,8 +54,8 @@ namespace FoundItemApp.Migrations
                     b.Property<DateTime>("PostedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("RegionId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("RegionId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -85,13 +85,15 @@ namespace FoundItemApp.Migrations
 
             modelBuilder.Entity("FoundItemApp.Models.Region", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
 
                     b.Property<Geometry>("Borders")
                         .IsRequired()
-                        .HasColumnType("geography");
+                        .HasColumnType("geometry");
 
                     b.Property<string>("Name")
                         .IsRequired()

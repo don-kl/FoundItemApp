@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using FoundItemApp.Interfaces;
 using NetTopologySuite.Features;
+using FoundItemApp.Dto.Region;
+using FoundItemApp.Dto.Region.ResponseType;
 
 namespace FoundItemApp.Controllers
 {
@@ -44,7 +46,7 @@ namespace FoundItemApp.Controllers
 
             } catch (Exception ex)
             {
-                _logger.LogInformation("api/region/names has produced an error {ex}", ex);
+                _logger.LogInformation("api/region/names has produced an error {ex}", ex.Message);
                 return StatusCode(500, ex.Message);
             }
         }
@@ -53,27 +55,27 @@ namespace FoundItemApp.Controllers
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        [ProducesResponseType(typeof(Double[]), 200)]
+        [ProducesResponseType(typeof(GetRegionEnvelopeDto), 200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         [HttpGet("envelope/{name}")]
         public async Task<IActionResult> GetRegionEnvelope([FromRoute] string name)
         {
-            _logger.LogInformation("api/region/{name} has been requested", name);
+            _logger.LogInformation("api/region/envelope/{name} has been requested", name);
             try
             {
-                var envelope = _services.GetRegionEnvelope(name);
+                var envelope = await _services.GetRegionEnvelope(name);
 
                 if (envelope == null)
                 {
-                    _logger.LogInformation("api/region/{name} not found", name);
+                    _logger.LogInformation("api/region/envelope/{name} not found", name);
                     return NotFound();
                 }
 
                 return Ok(envelope); 
             } catch (Exception ex)
             {
-                _logger.LogInformation("api/region/names has produced an error {ex}", ex);
+                _logger.LogInformation("api/region/envelope/{name} has produced an error {ex}", name, ex.Message);
                 return StatusCode(500, ex.Message);
             }
         }
@@ -84,18 +86,19 @@ namespace FoundItemApp.Controllers
         /// <param name="name"></param>
         /// <returns></returns>
         [HttpGet("{name}")]
-        [ProducesResponseType(typeof(Feature), 200)]
+        [ProducesResponseType(typeof(GetRegionResponseType), 200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetRegionBorder(string name)
         {
-            _logger.LogInformation("");
+            _logger.LogInformation("api/region/{name} has been requested", name);
             try
             {
                 var region = await _services.GetRegionBorders(name);
 
                 if(region == null)
                 {
+                    _logger.LogInformation("api/region/{name} not found", name);
                     return NotFound();
                 }
 
@@ -103,6 +106,7 @@ namespace FoundItemApp.Controllers
 
             } catch(Exception ex)
             {
+                _logger.LogInformation("api/region/{name} has produced an error {ex}", name, ex.Message);
                 return StatusCode(500, ex.Message);
             }
         }

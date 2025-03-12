@@ -2,8 +2,11 @@ using FoundItemApp.Data;
 using FoundItemApp.Helpers;
 using FoundItemApp.Interfaces;
 using FoundItemApp.Services;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using NetTopologySuite.Geometries;
+using NetTopologySuite.IO.Converters;
 using Serilog;
 using System.Reflection;
 
@@ -13,11 +16,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(options =>
 {
+    options.ModelMetadataDetailsProviders.Add(new SuppressChildValidationMetadataProvider(typeof(Point)));
+    options.ModelMetadataDetailsProviders.Add(new SuppressChildValidationMetadataProvider(typeof(Coordinate)));
+    options.ModelMetadataDetailsProviders.Add(new SuppressChildValidationMetadataProvider(typeof(LineString)));
+    options.ModelMetadataDetailsProviders.Add(new SuppressChildValidationMetadataProvider(typeof(MultiLineString)));
     options.InputFormatters.Insert(0, MyJPIF.GetJsonPatchInputFormatter());
 }).AddJsonOptions(options =>
 {
-    options.JsonSerializerOptions.Converters.Add(new NetTopologySuite.IO.Converters.GeoJsonConverterFactory());
-});
+    var geoJsonConverterFactory = new GeoJsonConverterFactory();
+    options.JsonSerializerOptions.Converters.Add(geoJsonConverterFactory);
+}
+);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -46,6 +55,7 @@ Log.Logger = new LoggerConfiguration()
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), x => x.UseNetTopologySuite()));
 
 builder.Services.AddScoped<IRegionServices, RegionServices>();
+builder.Services.AddScoped<IItemService, ItemService>();
 
 var app = builder.Build();
 

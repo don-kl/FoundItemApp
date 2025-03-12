@@ -7,7 +7,7 @@ using NetTopologySuite.Geometries;
 namespace FoundItemApp.Migrations
 {
     /// <inheritdoc />
-    public partial class AddModelsConfiguration : Migration
+    public partial class AddedItemAndRegion : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,9 +16,10 @@ namespace FoundItemApp.Migrations
                 name: "Regions",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Borders = table.Column<Geometry>(type: "geography", nullable: true)
+                    Borders = table.Column<Geometry>(type: "geometry", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -41,7 +42,7 @@ namespace FoundItemApp.Migrations
                     TimeFound = table.Column<TimeOnly>(type: "time", nullable: false),
                     PostedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Images = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RegionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    RegionId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
