@@ -1,10 +1,9 @@
 using FoundItemApp.Data;
-using FoundItemApp.Helpers;
 using FoundItemApp.Interfaces;
+using FoundItemApp.Middleware;
 using FoundItemApp.Services;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO.Converters;
 using Serilog;
@@ -20,7 +19,6 @@ builder.Services.AddControllers(options =>
     options.ModelMetadataDetailsProviders.Add(new SuppressChildValidationMetadataProvider(typeof(Coordinate)));
     options.ModelMetadataDetailsProviders.Add(new SuppressChildValidationMetadataProvider(typeof(LineString)));
     options.ModelMetadataDetailsProviders.Add(new SuppressChildValidationMetadataProvider(typeof(MultiLineString)));
-    options.InputFormatters.Insert(0, MyJPIF.GetJsonPatchInputFormatter());
 }).AddJsonOptions(options =>
 {
     var geoJsonConverterFactory = new GeoJsonConverterFactory();

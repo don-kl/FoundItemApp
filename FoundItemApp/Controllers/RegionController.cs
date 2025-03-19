@@ -7,6 +7,9 @@ using FoundItemApp.Dto.Region.ResponseType;
 
 namespace FoundItemApp.Controllers
 {
+    /// <summary>
+    /// The controller for Region related actions
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class RegionController : ControllerBase
@@ -21,9 +24,9 @@ namespace FoundItemApp.Controllers
         }
 
         /// <summary>
-        /// Get all region Names
+        /// Gets the names of all the regions stored.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns a list with all the names</returns>
         ///
         [HttpGet("names")]
         [ProducesResponseType(typeof(List<string>), 200)]
@@ -31,84 +34,65 @@ namespace FoundItemApp.Controllers
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetAllRegionNames()
         {
-            _logger.LogInformation("api/region/names has been requested");
-            try
+
+            var names = await _services.GetAllRegionNames();
+
+            if (names == null)
             {
-                var names = await _services.GetAllRegionNames();
-
-                if (names == null)
-                {
-                    _logger.LogInformation("api/region/names not found");
-                    return NotFound();
-                }
-
-                return Ok(names);
-
-            } catch (Exception ex)
-            {
-                _logger.LogInformation("api/region/names has produced an error {ex}", ex.Message);
-                return StatusCode(500, ex.Message);
+                _logger.LogInformation("404 NotFound: The region name list was not found");
+                return NotFound();
             }
+
+            return Ok(names);
         }
+
+
         /// <summary>
-        /// Get the envelope coordinates of the region
+        /// 
+        /// Gets the envelope coordinates of the the specified region
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        [ProducesResponseType(typeof(GetRegionEnvelopeDto), 200)]
+        /// <param name="regionName">The name of the region</param>
+        /// <returns>Returns an array with the envelope coordinates</returns>
+        [HttpGet("{regionName}/envelope")]
+        [ProducesResponseType(typeof(double[]), 200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        [HttpGet("envelope/{name}")]
-        public async Task<IActionResult> GetRegionEnvelope([FromRoute] string name)
+        public async Task<IActionResult> GetRegionEnvelope([FromRoute] string regionName)
         {
-            _logger.LogInformation("api/region/envelope/{name} has been requested", name);
-            try
-            {
-                var envelope = await _services.GetRegionEnvelope(name);
 
-                if (envelope == null)
-                {
-                    _logger.LogInformation("api/region/envelope/{name} not found", name);
-                    return NotFound();
-                }
+            var envelope = await _services.GetRegionEnvelope(regionName);
 
-                return Ok(envelope); 
-            } catch (Exception ex)
+            if (envelope == null)
             {
-                _logger.LogInformation("api/region/envelope/{name} has produced an error {ex}", name, ex.Message);
-                return StatusCode(500, ex.Message);
+                _logger.LogInformation("404 NotFound: The {region} envelope not found", regionName);
+                return NotFound();
             }
+
+            return Ok(envelope); 
+
         }
 
         /// <summary>
-        /// Get the borders of a region in geojson format
+        /// Gets the border coordinates of the specified region
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        [HttpGet("{name}")]
+        /// <param name="regionName">The region name</param>
+        /// <returns>Returns the coordinates of the region in GeoJSON format</returns>
+        [HttpGet("{regionName}")]
         [ProducesResponseType(typeof(GetRegionResponseType), 200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetRegionBorder(string name)
+        public async Task<IActionResult> GetRegionBorder([FromRoute] string regionName)
         {
-            _logger.LogInformation("api/region/{name} has been requested", name);
-            try
+
+            var region = await _services.GetRegionBorders(regionName);
+
+            if(region == null)
             {
-                var region = await _services.GetRegionBorders(name);
-
-                if(region == null)
-                {
-                    _logger.LogInformation("api/region/{name} not found", name);
-                    return NotFound();
-                }
-
-                return Ok(region);
-
-            } catch(Exception ex)
-            {
-                _logger.LogInformation("api/region/{name} has produced an error {ex}", name, ex.Message);
-                return StatusCode(500, ex.Message);
+                _logger.LogInformation("404 NotFound: The {region} was not found", regionName);
+                return NotFound();
             }
+
+            return Ok(region);
         }
     }
 }

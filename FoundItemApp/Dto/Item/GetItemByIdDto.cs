@@ -10,7 +10,8 @@ namespace FoundItemApp.Dto.Item
         public string Title { get; set; } = string.Empty;
         public string Location { get; set; } = string.Empty;
         public string UserEmail { get; set; } = string.Empty;
-        public ItemCategory Category { get; set; }
+        public string Category { get; set; } = string.Empty;
+        public string Status {  get; set; } = string.Empty;
         public DateOnly DateFound { get; set; }
         public TimeOnly TimeFound { get; set; }
         public string RegionName {  get; set; } = string.Empty;

@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dto\Item\ReponseType\" />
     <Folder Include="wwwroot\Images\" />
   </ItemGroup>
 

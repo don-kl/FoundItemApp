@@ -8,8 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Features;
 using FeatureCollection = NetTopologySuite.Features.FeatureCollection;
 using FoundItemApp.Interfaces;
-using Microsoft.AspNetCore.JsonPatch;
-using Azure;
 using Microsoft.IdentityModel.Tokens;
 
 namespace FoundItemApp.Services
@@ -76,7 +74,7 @@ namespace FoundItemApp.Services
 
         public async Task<FeatureCollection?> GetItemGeojson(string regionName)
         {
-            var items = await _context.Items.Where(x => x.Region.Name == regionName).ToListAsync();
+            var items = await _context.Items.Where(x => x.Region.Name == regionName && (x.Status == ItemStatus.Missing || x.Status == ItemStatus.HandedToPolice)).ToListAsync();
 
             if (items.Count == 0)
             {
@@ -90,8 +88,10 @@ namespace FoundItemApp.Services
                 AttributesTable attributeTable = new AttributesTable
                 {
                     {"Id", item.Id },
-                    {"Category", item.Category},
+                    {"Category", item.Category.ToString()},
+                    {"Status", item.Status.ToString() },
                     {"Date", item.DateFound }
+                    
                 };
 
                 featureCollection.Add(new Feature(item.Coordinates, attributeTable));
@@ -116,7 +116,8 @@ namespace FoundItemApp.Services
                 Description = item.Description,
                 Location = item.Location,
                 UserEmail = item.UserEmail,
-                Category = item.Category,
+                Category = item.Category.ToString(),
+                Status = item.Status.ToString(),
                 DateFound = item.DateFound,
                 TimeFound = item.TimeFound,
                 RegionName = item.Region.Name,
@@ -128,7 +129,7 @@ namespace FoundItemApp.Services
 
         public List<string>? GetItemCategories()
         {
-            var categoryList = Enum.GetValues(typeof(ItemCategory)).Cast<string>().ToList(); 
+            var categoryList = Enum.GetNames(typeof(ItemCategory)).ToList();
 
             if(categoryList.Count == 0)
             {
@@ -138,7 +139,7 @@ namespace FoundItemApp.Services
             return categoryList;
         }
 
-        public async Task<Item?> PatchItem(JsonPatchDocument<Item> patchDocument, Guid id)
+        public async Task<Item?> PatchItem(ItemStatus status, Guid id)
         {
             var item = await _context.Items.FirstOrDefaultAsync(item => item.Id == id);
 
@@ -147,7 +148,9 @@ namespace FoundItemApp.Services
                 return null;
             }
 
-            patchDocument.ApplyTo(item);
+            item.Status = status;
+
+            await _context.SaveChangesAsync();
 
             return item;
         }
@@ -230,8 +233,8 @@ namespace FoundItemApp.Services
                 {
                     Id = item.Id,
                     Title = item.Title,
-                    Category = item.Category,
-                    Status = item.Status,
+                    Category = item.Category.ToString(),
+                    Status = item.Status.ToString(),
                     DateFound = item.DateFound,
                     RegionName = item.Region.Name
                 });

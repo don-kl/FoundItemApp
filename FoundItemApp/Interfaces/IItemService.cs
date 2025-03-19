@@ -22,7 +22,7 @@ namespace FoundItemApp.Interfaces
 
         List<string>? GetItemCategories();
 
-        Task<Item?> PatchItem(JsonPatchDocument<Item> jsonPatch, Guid id);
+        Task<Item?> PatchItem(ItemStatus status, Guid id);
 
         Task<Item?> UpdateItem(Guid id, UpdateItemDto updateItem);
 

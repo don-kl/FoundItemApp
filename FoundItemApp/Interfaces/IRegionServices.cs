@@ -16,7 +16,7 @@ namespace FoundItemApp.Interfaces
         /// </summary>
         /// <param name="regionName"></param>
         /// <returns></returns>
-        Task<GetRegionEnvelopeDto?> GetRegionEnvelope(string regionName);
+        Task<double[]?> GetRegionEnvelope(string regionName);
 
         /// <summary>
         /// 

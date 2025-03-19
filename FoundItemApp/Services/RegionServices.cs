@@ -22,7 +22,7 @@ namespace FoundItemApp.Services
             var names = await _context.Regions.Select(r => r.Name).ToListAsync();
 
             if(names == null)
-            {
+            { 
                 return null;
             }
 

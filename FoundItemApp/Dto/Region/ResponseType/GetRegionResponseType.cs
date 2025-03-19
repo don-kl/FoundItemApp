@@ -1,23 +1,27 @@
-﻿namespace FoundItemApp.Dto.Region.ResponseType
+﻿using FoundItemApp.Models.Enums;
+
+namespace FoundItemApp.Dto.Region.ResponseType
 {
 
     public class GetRegionResponseType
     {
-        public string? Type { get; set; }
-        public GeometryRT? Geometry { get; set; } = new GeometryRT();
-        public PropertiesRT? Properties { get; set; } = new PropertiesRT();
+        public string Type { get; set; } = string.Empty;
+        public PropertiesGRRT? Geometry { get; set; } = new PropertiesGRRT();
+        public GeometryGRRT? Properties { get; set; } = new GeometryGRRT();
     }
 
-    public class GeometryRT
+    public class GeometryGRRT
     {
-        public string? Type { get; set; }
-        public Double[]? Coordinates { get; set; }
+        public string Type { get; set; } = string.Empty;
+        public double[]? Coordinates { get; set; }
     }
 
-    public class PropertiesRT
+    public class PropertiesGRRT
     {
-        public string? Name { get; set; }
-        public Double[]? Envelope { get; set; }
+        public string Id { get; set; } = string.Empty;
+        public string Category { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
+        public DateOnly Date { get; set; }
 
     }
 }
