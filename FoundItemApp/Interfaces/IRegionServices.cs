@@ -9,21 +9,21 @@ namespace FoundItemApp.Interfaces
         /// 
         /// </summary>
         /// <returns></returns>
-        Task<List<string>?> GetAllRegionNames();
+        Task<Dictionary<int, string>?> GetAllRegionNames();
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="regionName"></param>
+        /// <param name="regionId"></param>
         /// <returns></returns>
-        Task<double[]?> GetRegionEnvelope(string regionName);
+        Task<double[]?> GetRegionEnvelope(int regionId);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="regionId"></param>
         /// <returns></returns>
-        Task<Feature?> GetRegionBorders(string name); 
+        Task<Feature?> GetRegionBorders(int regionId); 
     }
 }
 

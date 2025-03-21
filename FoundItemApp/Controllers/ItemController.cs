@@ -28,7 +28,7 @@ namespace FoundItemApp.Controllers
         /// <summary>
         ///  Gets Items based on input region, category, status and date found
         /// </summary>
-        /// <param name="region">The name of the region</param>
+        /// <param name="regionId">The id of the region</param>
         /// <param name="category">The category of the item</param>
         /// <param name="status">The status of the item</param>
         /// <param name="date">The date it was found</param>
@@ -39,10 +39,10 @@ namespace FoundItemApp.Controllers
         [ProducesResponseType(typeof(List<ItemDto>), 200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetAllItems([FromQuery] string? region, [FromQuery] ItemCategory? category, [FromQuery] ItemStatus? status, [FromQuery] DateOnly? date, [FromQuery] int pageNumber, [FromQuery] int pageSize) 
+        public async Task<IActionResult> GetAllItems([FromQuery] int? regionId, [FromQuery] ItemCategory? category, [FromQuery] ItemStatus? status, [FromQuery] DateOnly? date, [FromQuery] int pageNumber, [FromQuery] int pageSize) 
         {
 
-            var items = await _services.GetAllItems(region, category, status, date, pageNumber, pageSize); 
+            var items = await _services.GetAllItems(regionId, category, status, date, pageNumber, pageSize); 
 
             if(items  == null)
             {
@@ -56,19 +56,19 @@ namespace FoundItemApp.Controllers
         /// <summary>
         /// Gets the items coordinates to display on the map.
         /// </summary>
-        /// <param name="regionName">The name of the region.</param>
+        /// <param name="regionId">The id of the region.</param>
         /// <returns>Returns a GeoJSON file with the coordinates of all items from the region.</returns>
         [HttpGet("{regionName}/geojson")]
         [ProducesResponseType(typeof(GetGeojsonResponseType), 200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetItemGeojson([FromRoute] string regionName) 
+        public async Task<IActionResult> GetItemGeojson([FromRoute] int regionId) 
         {
-            var items = await _services.GetItemGeojson(regionName);
+            var items = await _services.GetItemGeojson(regionId);
 
             if (items == null)
             {
-                _logger.LogInformation("404 NotFound: No items in {region} have been found", regionName);
+                _logger.LogInformation("404 NotFound: No items in {region} have been found", regionId);
                 return NotFound();
             }
 
@@ -115,7 +115,7 @@ namespace FoundItemApp.Controllers
                 return NotFound();
             }
 
-            return Ok(categories);
+            return Ok(categories); 
         }
         
         /// <summary>

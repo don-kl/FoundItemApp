@@ -17,23 +17,21 @@ namespace FoundItemApp.Services
             _context = context;
         }
 
-        public async Task<List<string>?> GetAllRegionNames()
+        public async Task<Dictionary<int, string>?> GetAllRegionNames()
         {
-            var names = await _context.Regions.Select(r => r.Name).ToListAsync();
+            var regions = await _context.Regions.ToDictionaryAsync(r => r.Id, r => r.Name);
 
-            if(names == null)
+            if(regions == null)
             { 
                 return null;
             }
 
-            var regionsNames = new HashSet<string>(names).ToList();
-
-            return regionsNames;
+            return regions;
         }
 
-        public async Task<double[]?> GetRegionEnvelope(string regionName)
+        public async Task<double[]?> GetRegionEnvelope(int regionId)
         {
-            var region = await _context.Regions.FirstOrDefaultAsync(x => x.Name == regionName);
+            var region = await _context.Regions.FirstOrDefaultAsync(x => x.Id == regionId);
 
             if(region == null)
             {
@@ -47,9 +45,9 @@ namespace FoundItemApp.Services
             return envelope;
         }
 
-        public async Task<Feature?> GetRegionBorders(string regionName)
+        public async Task<Feature?> GetRegionBorders(int regionId)
         {
-            var region = await _context.Regions.FirstOrDefaultAsync(x => x.Name == regionName);
+            var region = await _context.Regions.FirstOrDefaultAsync(x => x.Id == regionId);
 
             if(region == null)
             {

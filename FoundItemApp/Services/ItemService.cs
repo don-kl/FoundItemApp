@@ -29,9 +29,14 @@ namespace FoundItemApp.Services
 
             Point coord = new Point(item.Latitude, item.Longitude);
 
-            if(!region.Borders.Contains(coord) || region == null)
+            if(region == null)
             {
-                throw new InvalidOperationException("The name of the region does not exist or the coordinates or not within the region"); 
+                throw new InvalidOperationException("The name of the region does not exist"); 
+            }
+
+            if(!region.Borders.Contains(coord))
+            {
+                throw new InvalidOperationException("The coordinates of the item are not within the region borders");
             }
 
             Item newItem = new Item
@@ -72,9 +77,9 @@ namespace FoundItemApp.Services
             return foundItem;
         }
 
-        public async Task<FeatureCollection?> GetItemGeojson(string regionName)
+        public async Task<FeatureCollection?> GetItemGeojson(int regionId)
         {
-            var items = await _context.Items.Where(x => x.Region.Name == regionName && (x.Status == ItemStatus.Missing || x.Status == ItemStatus.HandedToPolice)).ToListAsync();
+            var items = await _context.Items.Where(x => x.RegionId == regionId && (x.Status == ItemStatus.Missing || x.Status == ItemStatus.HandedToPolice)).ToListAsync();
 
             if (items.Count == 0)
             {
@@ -191,7 +196,7 @@ namespace FoundItemApp.Services
             return item;
         }
 
-        public async Task<List<ItemDto>?> GetAllItems(string? region, ItemCategory? category, ItemStatus? status, DateOnly? date, int pageNumber, int pageSize)
+        public async Task<List<ItemDto>?> GetAllItems(int? regionId, ItemCategory? category, ItemStatus? status, DateOnly? date, int pageNumber, int pageSize)
         {
 
             var itemsQuery = _context.Items.AsQueryable();
@@ -201,9 +206,9 @@ namespace FoundItemApp.Services
                 return null;
             }
 
-            if (!region.IsNullOrEmpty())
+            if (regionId != null)
             {
-                itemsQuery = itemsQuery.Where(item => item.Region.Name == region);
+                itemsQuery = itemsQuery.Where(item => item.RegionId == regionId);
             }
 
             if (category != null)

@@ -9,21 +9,66 @@ namespace FoundItemApp.Interfaces
 {
     public interface IItemService
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="regionId"></param>
+        /// <param name="category"></param>
+        /// <param name="status"></param>
+        /// <param name="date"></param>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        Task<List<ItemDto>?> GetAllItems(int? regionId, ItemCategory? category, ItemStatus? status, DateOnly? date, int pageNumber, int pageSize);
 
-        Task<List<ItemDto>?> GetAllItems(string? region, ItemCategory? category, ItemStatus? status, DateOnly? date, int pageNumber, int pageSize);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="regionId"></param>
+        /// <returns></returns>
+        Task<FeatureCollection?> GetItemGeojson(int regionId);
 
-        Task<FeatureCollection?> GetItemGeojson(string regionName);
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         Task<GetItemByIdDto?> GetItemProfile(Guid id);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         Task<Item?> DeleteItem(Guid id);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="createItem"></param>
+        /// <returns></returns>
         Task CreateItem(CreateItemDto createItem);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         List<string>? GetItemCategories();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         Task<Item?> PatchItem(ItemStatus status, Guid id);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="updateItem"></param>
+        /// <returns></returns>
         Task<Item?> UpdateItem(Guid id, UpdateItemDto updateItem);
 
 
